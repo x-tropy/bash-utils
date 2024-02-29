@@ -41,10 +41,16 @@ string::trim() {
 #
 # @stdout Returns an array of strings created by splitting the string parameter by the delimiter.
 string::split() {
-    [[ $# -lt 2 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
-    declare -a arr=()
-    IFS=$'\n' read -d "" -ra arr <<< "${1//$2/$'\n'}"
-    printf '%s\n' "${arr[@]}"
+    # if delimeter is an empty string
+    if [[ -z $2 ]]; then
+        chars=$(echo "$1" | grep -o .)
+        printf '%s\n' "${chars[@]}"
+    else
+        [[ $# -lt 2 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
+        declare -a arr=()
+        IFS=$'\n' read -d "" -ra arr <<<"${1//$2/$'\n'}"
+        printf '%s\n' "${arr[@]}"
+    fi
 }
 
 # @description Strip characters from the beginning of a string.
