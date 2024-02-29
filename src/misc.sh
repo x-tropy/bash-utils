@@ -73,7 +73,7 @@ misc::get_pid() {
 misc::get_uid() {
     [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
 
-    user_id=$(id "${1}" 2> /dev/null)
+    user_id=$(id "${1}" 2>/dev/null)
     declare -i ret=$?
     if [[ $ret -ne 0 ]]; then
         printf "No user found with username: %s" "${1}\n"
@@ -100,22 +100,35 @@ misc::get_uid() {
 misc::generate_uuid() {
     C="89ab"
 
-    for ((N=0;N<16;++N)); do
-        B="$((RANDOM%256))"
+    for ((N = 0; N < 16; ++N)); do
+        B="$((RANDOM % 256))"
 
         case "$N" in
-            6)  printf '4%x' "$((B%16))" ;;
-            8)  printf '%c%x' "${C:$RANDOM%${#C}:1}" "$((B%16))" ;;
+        6) printf '4%x' "$((B % 16))" ;;
+        8) printf '%c%x' "${C:$RANDOM%${#C}:1}" "$((B % 16))" ;;
 
-            3|5|7|9)
-                printf '%02x-' "$B"
+        3 | 5 | 7 | 9)
+            printf '%02x-' "$B"
             ;;
 
-            *)
-                printf '%02x' "$B"
+        *)
+            printf '%02x' "$B"
             ;;
         esac
     done
 
     printf '\n'
+}
+
+# Print return code
+misc::print_return_code() {
+    if [ $? -eq 0 ]; then
+        echo '0'
+    elif [ $? -eq 1 ]; then
+        echo '1'
+    elif [ $? -eq 2 ]; then
+        echo '2'
+    else
+        echo 'return code is not 0|1|2'
+    fi
 }
