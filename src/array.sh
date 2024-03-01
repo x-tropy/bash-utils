@@ -45,7 +45,8 @@ array::contains() {
 # @exitcode 2 Function missing arguments.
 #
 # @stdout Deduplicated array.
-array::dedupe() {
+# 📝 Change function name into unique, easier to remember
+array::unique() {
     [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
     declare -A arr_tmp
     declare -a arr_unique
