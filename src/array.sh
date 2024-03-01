@@ -183,7 +183,7 @@ array::sort() {
     noglobtate="$(shopt -po noglob)"
     set -o noglob
     declare IFS=$'\n'
-    sorted=($(sort <<< "${array[*]}"))
+    sorted=($(sort <<<"${array[*]}"))
     unset IFS
     eval "${noglobtate}"
     printf "%s\n" "${sorted[@]}"
@@ -216,7 +216,7 @@ array::rsort() {
     noglobtate="$(shopt -po noglob)"
     set -o noglob
     declare IFS=$'\n'
-    sorted=($(sort -r<<< "${array[*]}"))
+    sorted=($(sort -r <<<"${array[*]}"))
     unset IFS
     eval "${noglobtate}"
     printf "%s\n" "${sorted[@]}"
@@ -275,10 +275,11 @@ array::bsort() {
 # @exitcode 2 Function missing arguments.
 #
 # @stdout Merged array.
+# 📝 Accept multiple arrays
 array::merge() {
-    [[ $# -ne 2 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
-    declare -a arr1=("${!1}")
-    declare -a arr2=("${!2}")
-    declare out=("${arr1[@]}" "${arr2[@]}")
-    printf "%s\n" "${out[@]}"
+    local result=()
+    for arr in "$@"; do
+        result+=("${arr[@]}")
+    done
+    echo "${result[@]}"
 }
